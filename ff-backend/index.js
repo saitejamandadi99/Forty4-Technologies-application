@@ -10,6 +10,15 @@ dotenv.config(); // to load the env variables.
 const PORT = 5000 || process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
 
+mongoose.connect(MONGO_URL)
+.then(()=>{
+    console.log('Connected to MongoDB');
+})
+.catch((err)=>{
+    console.log(err.message)
+}) // added the connection to the mongoDB cloud database connection string in the .env file.
+
+
 app.get('/', (req , res)=>{
     res.send('Api is running in the backend server forty4 Technologies');
 })
