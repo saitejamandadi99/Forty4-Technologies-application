@@ -23,6 +23,8 @@ app.get('/', (req , res)=>{
     res.send('Api is running in the backend server forty4 Technologies');
 })
 
+app.use('/api', require('./routes/userRoutes'))
+
 //error handling middleware
 app.use((err,req , res, next)=>{
     res.status(500).send({message: err.message}); //500 is the internal server error
