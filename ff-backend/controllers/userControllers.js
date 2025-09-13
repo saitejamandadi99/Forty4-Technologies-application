@@ -21,6 +21,11 @@ const createUser = async (req , res)=>{
         if(!name || !email || !phone || !company || !address){
             return res.status(400).send({message: 'All fields are required'});
         }
+        const {street, city, state, zipCode} = address;
+        if(!street || !city || !state || !zipCode || !address.geo || address.geo.latitude === undefined || address.geo.longitude === undefined){
+            return res.status(400).send({message: 'Address fields (street, city, state, zipCode) are required'});
+        } // basic validation for address fields.
+
         const existingUser = await User.findOne({$or:[{email:email},{phone:phone}]});
         if(existingUser){
             return res.status(400).send({message: 'User with this email or phone number already exists'});

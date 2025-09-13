@@ -12,8 +12,8 @@ const userSchema = new mongoose.Schema({
         
         // Geolocation for maps/location services
         geo: {
-            latitude: {type: Number, min: -90, max: 90},
-            longitude: {type: Number, min: -180, max: 180}
+            latitude: {type: Number, min: -90, max: 90, required: true},
+            longitude: {type: Number, min: -180, max: 180, required: true}
         }
     }
 }, {
