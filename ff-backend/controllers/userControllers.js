@@ -55,6 +55,22 @@ const getUserById = async (req , res)=>{
     }
 }
 
+//update the user by id
+const updateUserById = async( req ,res)=>{
+    try {
+        const userId = req.params.id; 
+        const updates = req.body; 
+        const user = await User.findByIdAndUpdate(userId, updates, {new:true}); // new:true returns the updated document.
+        if(!user){
+            return res.status(404).send({message: 'User not found'});
+        }   
+        res.status(200).send({message:'User updated successfully', user:user});
+        
+    } catch (error) {
+        res.status(500).send({message: error.message});
+    }
+}
+
 //delete a user by id
 const deleteUserById = async (req , res)=>{
     try {
@@ -73,4 +89,4 @@ const deleteUserById = async (req , res)=>{
 
 
 
-module.exports = {getAllUsers, deleteUserById, getUserById};
+module.exports = {getAllUsers, deleteUserById, getUserById, createUser, updateUserById};
