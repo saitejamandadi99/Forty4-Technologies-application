@@ -5,7 +5,7 @@ const User = require('../models/userModel');
 
 const getAllUsers = async (req , res)=>{
     try {
-        const users = await User.find({}); 
+        const users = await User.find(); 
         res.status(200).send({message:'Users fetched successfully', users:users});
         
     } catch (error) {
@@ -14,11 +14,47 @@ const getAllUsers = async (req , res)=>{
     }
 }
 
+//create user 
+const createUser = async (req , res)=>{
+    try{
+        const {name, email, phone, company, address} = req.body; 
+        if(!name || !email || !phone || !company || !address){
+            return res.status(400).send({message: 'All fields are required'});
+        }
+        const existingUser = await User.findOne({$or:[{email:email},{phone:phone}]});
+        if(existingUser){
+            return res.status(400).send({message: 'User with this email or phone number already exists'});
+        }
+        const user = new User({name, email, phone, company, address});
+        await user.save();
+        res.status(201).send({message: 'User created successfully', user:user});
+    }
+    catch(error){
+        res.status(500).send({message: error.message});
+    }
+}
+
+// return single user by id 
+
+const getUserById = async (req , res)=>{
+    try {
+        const userId = req.params.id; 
+        const user = await User.findById(userId); 
+        if(!user){
+            return res.status(404).send({message: 'User not found'});
+        }
+        res.status(200).send({message:'User details fetched successfully', user:user});
+        
+    } catch (error) {
+        res.status(500).send({message: error.message});
+    }
+}
+
 //delete a user by id
 const deleteUserById = async (req , res)=>{
     try {
         const userId = req.params.id; 
-        const user = await user.findByIdAndDelete(userId); // finds the user by id and deletes it returns user if there else null.
+        const user = await User.findByIdAndDelete(userId); // finds the user by id and deletes it returns user if there else null.
         if(!user){
             return res.status(404).send({message: 'User not found'});
         }
@@ -32,4 +68,4 @@ const deleteUserById = async (req , res)=>{
 
 
 
-module.exports = {getAllUsers};
+module.exports = {getAllUsers, deleteUserById, getUserById};
