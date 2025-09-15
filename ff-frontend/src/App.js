@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import UserDashboard from "./pages/UserDashboard/UserDashboard";
 import UserForm from "./pages/UserForm/UserForm";
-import UserDetail from "./pages/UserDetail/UserDetail";
+import UserDetails from "./pages/UserDetails/UserDetails";
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<UserDashboard />} />
         <Route path="/create" element={<UserForm />} />
-        <Route path="/user/:id" element={<UserDetail />} />
+        <Route path="/user/:id" element={<UserDetails />} />
       </Routes>
     </Router>
   );
