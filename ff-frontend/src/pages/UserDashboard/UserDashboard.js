@@ -43,10 +43,15 @@ const UserDashboard = () => {
       {loading && <p>Loading...</p>}
 
       <div className="row mt-3">
-        {users.map((user) => (
-          <UserCard key={user._id} user={user} onDelete={handleDelete} />
-        ))}
+            {users.length === 0 ? (
+                    <p className="text-center text-muted">No users found.</p>
+            ) : (
+            users.map((user) => (
+                    <UserCard key={user._id} user={user} onDelete={handleDelete} />
+            ))
+        )}
       </div>
+
     </div>
   );
 };
