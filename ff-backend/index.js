@@ -30,6 +30,4 @@ app.use((err,req , res, next)=>{
     res.status(500).send({message: err.message}); //500 is the internal server error
 })
 
-app.listen(PORT,()=>{
-    console.log(`server is running on http://localhost:${PORT}`);
-}) 
+module.exports = app;
