@@ -31,6 +31,15 @@ const UserDashboard = () =>{
     useEffect(()=>{
         fetchData();
     })
+
+    return (
+        <div>
+            <h1>User Dashboard</h1>
+            {isLoading && <p>Loading...</p>}
+            {error && <p style={{color:'red'}}>Error: {error}</p>}
+            {success && <p style={{color:'green'}}>Success: {success}</p>}
+        </div>
+    )
 }
 
 export default UserDashboard
