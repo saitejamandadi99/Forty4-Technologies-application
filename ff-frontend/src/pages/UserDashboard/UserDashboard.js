@@ -1,6 +1,6 @@
 import {useState,useEffect} from 'react'; 
 import axios from 'axios'; 
-import env from 'react-dotenv'; //check this once for more details
+
 
 
 const UserDashboard = () =>{
@@ -13,7 +13,7 @@ const UserDashboard = () =>{
     const fetchData = async () =>{
         setIsLoading(true);
         try {
-            const url = env.REACT_APP_API_URL || 'http://localhost:5000/api/users';
+            const url = `${process.env.REACT_APP_API_URL}/api/users`;
             const response = await axios.get(url);
             setUserData(response.data.users);
             setSuccess(response.data.message);
@@ -30,7 +30,7 @@ const UserDashboard = () =>{
 
     useEffect(()=>{
         fetchData();
-    })
+    },[])
 
     return (
         <div>
