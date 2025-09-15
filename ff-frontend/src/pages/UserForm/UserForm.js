@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const UserForm = () => {
@@ -16,25 +16,47 @@ const UserForm = () => {
       zipCode: "",
       geo: {
         latitude: "",
-        longitude: ""
-      }
-    }
+        longitude: "",
+      },
+    },
   });
 
   const navigate = useNavigate();
+  const { id } = useParams(); // check if editing
+
+  // fetch existing user if editing
+  useEffect(() => {
+    if (id) {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/api/users/${id}`)
+        .then((res) => {
+          // ✅ backend sends { message, user }, so we need res.data.user
+          setFormData((prev) => ({
+            ...prev,
+            ...res.data.user,
+            address: {
+              ...prev.address,
+              ...res.data.user.address,
+              geo: {
+                ...prev.address.geo,
+                ...res.data.user.address.geo,
+              },
+            },
+          }));
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [id]);
 
   // handle nested input updates
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // for nested fields like address.geo.latitude
     if (name.includes(".")) {
       const keys = name.split(".");
       setFormData((prev) => {
         let updated = { ...prev };
         let obj = updated;
-
-        // go deep until last key
         for (let i = 0; i < keys.length - 1; i++) {
           obj[keys[i]] = { ...obj[keys[i]] };
           obj = obj[keys[i]];
@@ -47,23 +69,33 @@ const UserForm = () => {
     }
   };
 
+  // handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/users`,
-        formData
-      );
+      if (id) {
+        // Update user
+        await axios.put(
+          `${process.env.REACT_APP_API_URL}/api/users/${id}`,
+          formData
+        );
+      } else {
+        // Create new user
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/users`,
+          formData
+        );
+      }
       navigate("/");
     } catch (err) {
       console.error(err.response?.data || err.message);
-      alert("Error creating user. Check console for details.");
+      alert("Error while saving user. Check console for details.");
     }
   };
 
   return (
     <div className="container mt-4">
-      <h2>Create User</h2>
+      <h2>{id ? "Edit User" : "Create User"}</h2>
       <form onSubmit={handleSubmit}>
         {/* Basic Info */}
         <div className="mb-3">
@@ -186,7 +218,7 @@ const UserForm = () => {
         </div>
 
         <button type="submit" className="btn btn-primary">
-          Create User
+          {id ? "Update User" : "Create User"}
         </button>
       </form>
     </div>
