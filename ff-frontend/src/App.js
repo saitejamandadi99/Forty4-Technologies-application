@@ -10,6 +10,7 @@ function App() {
         <Route path="/" element={<UserDashboard />} />
         <Route path="/create" element={<UserForm />} />
         <Route path="/user/:id" element={<UserDetails />} />
+        <Route path="/edit/:id" element={<UserForm />} />
       </Routes>
 
   );
